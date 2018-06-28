@@ -6,6 +6,7 @@ public class ParkManager {
 	private int id;
 	ArrayList<Park> allParks;
 	
+	
 public String[] getParkNames() {
 		String[] parkNamesArr = (String[]) parkNames.stream().toArray();
 		return parkNamesArr;

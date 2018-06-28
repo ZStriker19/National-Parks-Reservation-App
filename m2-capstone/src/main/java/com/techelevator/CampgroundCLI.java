@@ -4,30 +4,83 @@ import javax.sql.DataSource;
 
 import org.apache.commons.dbcp2.BasicDataSource;
 
-import com.techelevator.view.ParkMenu;
+import com.techelevator.view.ParkInfoMenu;
+import com.techelevator.view.ParkMainMenu;
+import com.techelevator.view.ReservationMenu;
+
 
 public class CampgroundCLI {
-    private ParkMenu parkMenu;
+    private ParkMainMenu parkMenu;
+    private ParkInfoMenu parkInfoMenu;
+    private CampgroundMenu campgroundMenu;
+    private ReservationMenu reservationMenu;
+    private CampgroundManager campgroundManager;
 
-	public CampgroundCLI(DataSource datasource, ParkMenu parkMenu) {
+	public CampgroundCLI(DataSource datasource, ParkMainMenu parkMenu, ParkInfoMenu parkInfoMenu, CampgroundMenu campgroundMenu, ReservationMenu reservationMenu, CampgroundManager campgroundManager) {
 		// create your DAOs here
 		this.parkMenu = parkMenu;
+		this.parkInfoMenu = parkInfoMenu;
+		this.campgroundMenu = campgroundMenu;
+		this.reservationMenu = reservationMenu;
+		this.campgroundManager = campgroundManager;
 	}
 	
 	public void run() {
 		parkMenu.setParks();
 		boolean runninIt = true;
 		while(runninIt) {
-			String choice = (String)parkMenu.getChoiceFromOptions(parkMenu.getParks());
+			int choice = parkMenu.getChoiceFromOptions(parkMenu.getParks());
+			if(choice == -1) {
+				break;
+			}
 			boolean runParkMenu = true;
 			
 			while (runParkMenu) {
+				String parkChoice = (String)parkInfoMenu.getChoiceFromOptionsSTR(parkInfoMenu.getCampgroundOptions());
 				
-				
-				
-				
-				
+				if(parkChoice.equals(parkInfoMenu.getViewCampgrounds())) {
+					
+					boolean runningViewCampgrounds = true;
+					while(runningViewCampgrounds) {
+						String viewCampgroundChoice = (String)campgroundMenu.getChoiceFromOptionsSTR(campgroundMenu.getViewCampgroundMenuOptions());
+						if(viewCampgroundChoice.equals(campgroundMenu.getSearchForAvailRes())) {
+							int campgroundChoice = reservationMenu.getChoiceFromOptions(reservationMenu.getCampgroundStr());
+							if(campgroundChoice == -1) {
+								break;
+							}
+							else {
+								reservationMenu.setCampgroundSelected(campgroundChoice, campgroundManager);
+								reservationMenu.askArrivalDate(campgroundManager);
+								reservationMenu.askDepatureDate(campgroundManager);
+								if(reservationMenu.tryDisplayAvailability(campgroundManager)==false) continue;
+								reservationMenu.selectSiteToReserve(campgroundManager);
+								reservationMenu.getReservationName(campgroundManager);
+							}
+						}
+						else if (viewCampgroundChoice.equals(campgroundMenu.getReturnToPreviousScreen())) {
+							break;
+						}
+					}
+				}
+				else if (parkChoice.equals(parkInfoMenu.getSearchForReservation())){
+					int campgroundChoice = reservationMenu.getChoiceFromOptions(reservationMenu.getCampgroundStr());
+					if(campgroundChoice == -1) {
+						break;
+					}
+					else {
+						reservationMenu.setCampgroundSelected(campgroundChoice, campgroundManager);
+						reservationMenu.askArrivalDate(campgroundManager);
+						reservationMenu.askDepatureDate(campgroundManager);
+						if(reservationMenu.tryDisplayAvailability(campgroundManager)==false) continue;
+						reservationMenu.selectSiteToReserve(campgroundManager);
+						reservationMenu.getReservationName(campgroundManager);
+					}
+				}
+				else if (parkChoice.equals(parkInfoMenu.getReturnToPreviousScreen())){
+					break;
+				}
 			}
+				
 		}
 		
 	}
@@ -36,9 +89,13 @@ public class CampgroundCLI {
 		BasicDataSource dataSource = new BasicDataSource();
 		dataSource.setUrl("jdbc:postgresql://localhost:5432/campground");
 		dataSource.setUsername("postgres");
-		ParkMenu parkMenu = new ParkMenu(System.in, System.out);
+		ParkMainMenu parkMenu = new ParkMainMenu(System.in, System.out);
+		ParkInfoMenu parkInfoMenu = new ParkInfoMenu(System.in, System.out);
+		CampgroundMenu campgroundMenu = new CampgroundMenu(System.in, System.out);
+		ReservationMenu reservationMenu = new ReservationMenu(System.in, System.out);
+		CampgroundManager campgroundManager = new CampgroundManager();
 		
-		CampgroundCLI application = new CampgroundCLI(dataSource, parkMenu);
+		CampgroundCLI application = new CampgroundCLI(dataSource, parkMenu, parkInfoMenu, campgroundMenu, reservationMenu, campgroundManager);
 		
 		
 		application.run();

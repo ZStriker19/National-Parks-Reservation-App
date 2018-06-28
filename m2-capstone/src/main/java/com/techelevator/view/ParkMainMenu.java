@@ -5,12 +5,12 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ParkMenu extends Menu {
+public class ParkMainMenu extends Menu {
 	
 	private List<String> parkNames = new ArrayList<String>();
 	private List<Park> parkId;
 
-	public ParkMenu(InputStream input, OutputStream output) {
+	public ParkMainMenu(InputStream input, OutputStream output) {
 		super(input, output);
 		
 	}
@@ -19,10 +19,5 @@ public class ParkMenu extends Menu {
 //	private setParks() {
 //		this.parkNames = parkManager.getParkNames 
 //	}
-	
-	
-	
-	
-	
-	
+
 }
