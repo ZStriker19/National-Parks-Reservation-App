@@ -27,7 +27,8 @@ public class ReservationMenu extends Menu {
 	
 	public String[] getCampgroundStr(CampgroundManager campgroundManager) {
 		System.out.println("Name \t Open \t Close \t Daily Fee");
-		return campgroundManager.createCampgroundStr;
+		String[] campgroundStrs =  campgroundManager.createCampgroundStr();
+		return campgroundStrs;
 	}
 	public void printCampgroundToSelect() {
 		System.out.print("Which campground (enter Q to cancel)? ");
@@ -85,16 +86,6 @@ public class ReservationMenu extends Menu {
 		System.out.print("The reservation has been made and the confirmation id is: " + reservationId);
 	}
 	
-	@Override
-	public int getChoiceFromOptions(String[] options) {
-		int choice = 0;
-		while(choice == 0) {
-			displayMenuOptions(options);
-			printCampgroundToSelect();
-			choice = getChoiceFromUserInput(options);
-		}
-		return choice;
-	}
 	
 	public String[] getCampgroundStr() {
 		return campgroundStr;

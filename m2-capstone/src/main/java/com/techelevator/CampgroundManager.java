@@ -37,6 +37,7 @@ public class CampgroundManager {
 	public String[] createCampgroundStr() {
 		String[] campgroundStrToDisplay = new String[campgrounds.size()];
 		for(int i=0; i<campgrounds.size(); i++) {
+			//NEED TO FORMAT STRING TO BE PRETTIER!!!!! Individual human take care of this.
 			String campgroundStr = String.format("%s\t%s\t%s\t%s\n", 
 					campgrounds.get(i).getName(), campgrounds.get(i).getOpen_from_mm(), 
 					campgrounds.get(i).getOpen_to_mm(), "$" + campgrounds.get(i).getDaily_fee().toString()); 

@@ -22,7 +22,7 @@ public class CampgroundMenu extends Menu{
 	}
 	
 	public void displayAllCampgroundsForPark(CampgroundManager campgroundManager) {
-		System.out.println("Name\t\t Open\t Close\t\t Daily Fee\n");
+		System.out.println(" Name\t\t Open\t Close\t\t Daily Fee\n");
 		super.displayMenuOptions(campgroundManager.createCampgroundStr());
 	}
 	
