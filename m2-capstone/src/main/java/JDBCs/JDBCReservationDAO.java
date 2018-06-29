@@ -1,5 +1,6 @@
 package JDBCs;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -34,23 +35,24 @@ public class JDBCReservationDAO implements ReservationDAO{
 		return reservationList;
 	}
 
-	@Override
-	public List<Reservation> getReservationById() {
-		
-		return null;
-	}
 
 	@Override
-	public List<Reservation> getReservationByDate() {
-		// TODO Auto-generated method stub
-		return null;
+	public long createReservation(Reservation newReservation) {
+		
+		String ReservationSQL = "INSERT INTO reservation(reservation_id, from_date, to_date, site_id, name) VALUES (?,?,?,?,?) ";
+		newReservation.setReservation_id(getNextReservationId());
+		 jdbcTemplate.update(ReservationSQL, newReservation.getReservation_id(), newReservation.getFrom_date(), newReservation.getTo_date(), newReservation.getSite_id(), newReservation.getName());
+
+		return newReservation.getReservation_id();
 	}
+	
+
 	
 	private Reservation mapRowToReservation(SqlRowSet results) {
 		Reservation theReservation = new Reservation();
 		
 		theReservation.setReservation_id(results.getLong("reservation_id"));
-		theReservation.setSite_it(results.getInt("site_id"));
+		theReservation.setSite_id(results.getInt("site_id"));
 		theReservation.setName(results.getString("name"));
 		theReservation.setFrom_date(results.getDate("from_date"));
 		theReservation.setTo_date(results.getDate("to_date"));
@@ -58,5 +60,13 @@ public class JDBCReservationDAO implements ReservationDAO{
 		
 		return theReservation;
 	}
-
+	
+	private long getNextReservationId() {
+        SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_reservation_id')");
+        if(nextIdResult.next()) {
+            return nextIdResult.getLong(1);
+        } else {
+            throw new RuntimeException("Something went wrong while getting an id for the new reservation");
+        }
+    }
 }

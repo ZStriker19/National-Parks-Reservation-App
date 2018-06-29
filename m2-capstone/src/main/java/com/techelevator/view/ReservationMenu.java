@@ -13,6 +13,7 @@ import com.techelevator.CampgroundManager;
 import com.techelevator.CampgroundMenu;
 
 import DAOInterfacesAndJavaBeans.Campground;
+import JDBCs.JDBCReservationDAO;
 
 public class ReservationMenu extends Menu {
 	
@@ -77,6 +78,11 @@ public class ReservationMenu extends Menu {
 				invalidName = true;
 			}
 		}
+	}
+	
+	public void createReservation(CampgroundManager campgroundManager, JDBCReservationDAO reservationDAO) {
+		long reservationId = campgroundManager.createReservation(reservationDAO);
+		System.out.print("The reservation has been made and the confirmation id is: " + reservationId);
 	}
 	
 	@Override

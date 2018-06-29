@@ -3,7 +3,7 @@ import java.util.Date;
 
 public class Reservation {
 	private Long reservation_id;
-	private int site_it;
+	private int site_id;
 	private String name;
 	private Date from_date;
 	private Date to_date;
@@ -16,11 +16,11 @@ public class Reservation {
 	public void setReservation_id(Long reservation_id) {
 		this.reservation_id = reservation_id;
 	}
-	public int getSite_it() {
-		return site_it;
+	public int getSite_id() {
+		return site_id;
 	}
-	public void setSite_it(int site_it) {
-		this.site_it = site_it;
+	public void setSite_id(int site_it) {
+		this.site_id = site_id;
 	}
 	public String getName() {
 		return name;

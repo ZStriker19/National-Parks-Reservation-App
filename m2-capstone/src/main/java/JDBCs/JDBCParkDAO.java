@@ -38,7 +38,7 @@ public class JDBCParkDAO implements ParkDAO{
 		park.setPark_id(results.getLong("park_id"));
 		park.setName(results.getString("name"));
 		park.setLocation(results.getString("location"));
-		park.setEstablished_date(results.getDate("established_date"));
+		park.setEstablish_date(results.getDate("establish_date"));
 		park.setArea(results.getInt("area"));
 		park.setVisitors(results.getInt("visitors"));
 		park.setDescription(results.getString("description"));

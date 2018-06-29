@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import com.techelevator.view.Menu;
 
 import DAOInterfacesAndJavaBeans.Campground;
+import JDBCs.JDBCCampgroundDAO;
 
 public class CampgroundMenu extends Menu{
 
@@ -19,9 +20,14 @@ public class CampgroundMenu extends Menu{
 		super(input, output);
 		
 	}
+	
 	public void displayAllCampgroundsForPark(CampgroundManager campgroundManager) {
-		ArrayList <Campground> campgrounds = campgroundManager.getCampgrounds();
-		//need actual campground info to present. Will be done after DAO creation.
+		System.out.println("Name\t\t Open\t Close\t\t Daily Fee\n");
+		super.displayMenuOptions(campgroundManager.createCampgroundStr());
+	}
+	
+	public void setCampgrounds(CampgroundManager campgroundManager, int park_id, JDBCCampgroundDAO campgroundDAO) {
+		campgroundManager.setAvailCampgrounds(campgroundDAO, park_id);
 	}
 	public String getSearchForAvailRes() {
 		return searchForAvailRes;
@@ -32,6 +38,7 @@ public class CampgroundMenu extends Menu{
 	public String[] getViewCampgroundMenuOptions() {
 		return viewCampgroundMenuOptions;
 	}
+	
 	
 	
 	

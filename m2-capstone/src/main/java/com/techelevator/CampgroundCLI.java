@@ -8,6 +8,11 @@ import com.techelevator.view.ParkInfoMenu;
 import com.techelevator.view.ParkMainMenu;
 import com.techelevator.view.ReservationMenu;
 
+import JDBCs.JDBCCampgroundDAO;
+import JDBCs.JDBCParkDAO;
+import JDBCs.JDBCReservationDAO;
+import JDBCs.JDBCSiteDAO;
+
 
 public class CampgroundCLI {
     private ParkMainMenu parkMenu;
@@ -15,31 +20,45 @@ public class CampgroundCLI {
     private CampgroundMenu campgroundMenu;
     private ReservationMenu reservationMenu;
     private CampgroundManager campgroundManager;
+    private ParkManager parkManager;
+    
+    private JDBCReservationDAO reservationDAO;
+    private JDBCSiteDAO siteDAO;
+    private JDBCParkDAO parkDAO;
+    private JDBCCampgroundDAO campgroundDAO;
 
-	public CampgroundCLI(DataSource datasource, ParkMainMenu parkMenu, ParkInfoMenu parkInfoMenu, CampgroundMenu campgroundMenu, ReservationMenu reservationMenu, CampgroundManager campgroundManager) {
-		// create your DAOs here
+	public CampgroundCLI(DataSource datasource, ParkMainMenu parkMenu, ParkInfoMenu parkInfoMenu, CampgroundMenu campgroundMenu, ReservationMenu reservationMenu, CampgroundManager campgroundManager, ParkManager parkManager, JDBCReservationDAO reservationDAO, JDBCSiteDAO siteDAO, JDBCParkDAO parkDAO, JDBCCampgroundDAO campgroundDAO) {
+		
 		this.parkMenu = parkMenu;
 		this.parkInfoMenu = parkInfoMenu;
 		this.campgroundMenu = campgroundMenu;
 		this.reservationMenu = reservationMenu;
 		this.campgroundManager = campgroundManager;
+		this.parkManager = parkManager;
+		
+		this.reservationDAO = reservationDAO;
+		this.siteDAO = siteDAO;
+		this.parkDAO = parkDAO;
+		this.campgroundDAO = campgroundDAO;
 	}
 	
 	public void run() {
-		parkMenu.setParks();
+		parkMenu.setParks(parkManager, parkDAO);
 		boolean runninIt = true;
 		while(runninIt) {
-			int choice = parkMenu.getChoiceFromOptions(parkMenu.getParks());
+			int choice = parkMenu.getChoiceFromOptions(parkMenu.getParkNames(parkManager));
 			if(choice == -1) {
 				break;
 			}
 			boolean runParkMenu = true;
 			
 			while (runParkMenu) {
+				parkInfoMenu.getSelectedParkInformation(choice, parkManager);
 				String parkChoice = (String)parkInfoMenu.getChoiceFromOptionsSTR(parkInfoMenu.getCampgroundOptions());
 				
 				if(parkChoice.equals(parkInfoMenu.getViewCampgrounds())) {
-					
+					campgroundMenu.setCampgrounds(campgroundManager, choice, campgroundDAO);
+					campgroundMenu.displayAllCampgroundsForPark(campgroundManager);
 					boolean runningViewCampgrounds = true;
 					while(runningViewCampgrounds) {
 						String viewCampgroundChoice = (String)campgroundMenu.getChoiceFromOptionsSTR(campgroundMenu.getViewCampgroundMenuOptions());
@@ -55,6 +74,7 @@ public class CampgroundCLI {
 								if(reservationMenu.tryDisplayAvailability(campgroundManager)==false) continue;
 								reservationMenu.selectSiteToReserve(campgroundManager);
 								reservationMenu.getReservationName(campgroundManager);
+								reservationMenu.createReservation(campgroundManager, reservationDAO);
 							}
 						}
 						else if (viewCampgroundChoice.equals(campgroundMenu.getReturnToPreviousScreen())) {
@@ -74,6 +94,7 @@ public class CampgroundCLI {
 						if(reservationMenu.tryDisplayAvailability(campgroundManager)==false) continue;
 						reservationMenu.selectSiteToReserve(campgroundManager);
 						reservationMenu.getReservationName(campgroundManager);
+						reservationMenu.createReservation(campgroundManager, reservationDAO);
 					}
 				}
 				else if (parkChoice.equals(parkInfoMenu.getReturnToPreviousScreen())){
@@ -94,8 +115,13 @@ public class CampgroundCLI {
 		CampgroundMenu campgroundMenu = new CampgroundMenu(System.in, System.out);
 		ReservationMenu reservationMenu = new ReservationMenu(System.in, System.out);
 		CampgroundManager campgroundManager = new CampgroundManager();
+		ParkManager parkManager = new ParkManager();
+		JDBCReservationDAO reservationDAO = new JDBCReservationDAO(dataSource);
+		JDBCSiteDAO siteDAO = new JDBCSiteDAO(dataSource);
+		JDBCParkDAO parkDAO = new JDBCParkDAO(dataSource);
+		JDBCCampgroundDAO campgroundDAO = new JDBCCampgroundDAO(dataSource);
 		
-		CampgroundCLI application = new CampgroundCLI(dataSource, parkMenu, parkInfoMenu, campgroundMenu, reservationMenu, campgroundManager);
+		CampgroundCLI application = new CampgroundCLI(dataSource, parkMenu, parkInfoMenu, campgroundMenu, reservationMenu, campgroundManager, parkManager, reservationDAO, siteDAO, parkDAO, campgroundDAO);
 		
 		
 		application.run();

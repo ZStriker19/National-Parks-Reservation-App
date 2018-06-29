@@ -3,6 +3,8 @@ package com.techelevator.view;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import com.techelevator.ParkManager;
+
 public class ParkInfoMenu extends Menu {
 
 	private final String viewCampgrounds = "View Campgrounds";
@@ -13,10 +15,6 @@ public class ParkInfoMenu extends Menu {
 	
 	public ParkInfoMenu(InputStream input, OutputStream output) {
 		super(input, output);
-		
-	}
-	public void getParkInfo() {
-		System.out.printf("%s\n%s\n%s\n", viewCampgrounds, searchForReservation, returnToPreviousScreen);
 		
 	}
 	public String[] getCampgroundOptions() {
@@ -30,6 +28,13 @@ public class ParkInfoMenu extends Menu {
 	}
 	public String getReturnToPreviousScreen() {
 		return returnToPreviousScreen;
+	}
+	public void getSelectedParkInformation(int userInput, ParkManager parkManager) {
+		parkManager.setId(userInput);
+		System.out.print(parkManager.getParkString());
+	}
+	public void displayCampgrounds() {
+		
 	}
 	
 

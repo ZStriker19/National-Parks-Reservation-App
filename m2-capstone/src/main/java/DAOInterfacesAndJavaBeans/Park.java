@@ -6,7 +6,7 @@ public class Park {
 	private Long park_id;
 	private String name;
 	private String location;
-	private Date established_date; 
+	private Date establish_date; 
 	private int area;
 	private int visitors;
 	private String description;
@@ -21,8 +21,8 @@ public class Park {
 	public String getLocation() {
 		return location;
 	}
-	public Date getEstablished_date() {
-		return established_date;
+	public Date getEstablish_date() {
+		return establish_date;
 	}
 	public int getArea() {
 		return area;
@@ -42,8 +42,8 @@ public class Park {
 	public void setLocation(String location) {
 		this.location = location;
 	}
-	public void setEstablished_date(Date established_date) {
-		this.established_date = established_date;
+	public void setEstablish_date(Date established_date) {
+		this.establish_date = established_date;
 	}
 	public void setArea(int area) {
 		this.area = area;

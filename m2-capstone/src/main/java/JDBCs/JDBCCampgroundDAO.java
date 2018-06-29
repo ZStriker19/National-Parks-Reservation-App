@@ -20,10 +20,11 @@ public class JDBCCampgroundDAO implements CampgroundDAO {
 	}
 
 	@Override
-	public List<Campground> getAllCampgrounds() {
+	public List<Campground> getAllCampgrounds(int park_id) {
 		List<Campground>  campgrounds = new ArrayList<Campground>();
-		String sqlGetAllCampgrounds = "SELECT * FROM campground";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAllCampgrounds);
+		String sqlGetAllCampgrounds = "SELECT * FROM campground " +
+								"JOIN park ON campground.park_id = ?" ;
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAllCampgrounds, park_id);
 		while(results.next()) {
 			Campground campground = mapRowToCampground(results);
 			campgrounds.add(campground);
@@ -33,10 +34,12 @@ public class JDBCCampgroundDAO implements CampgroundDAO {
 	}
 
 	@Override
-	public List<Campground> getCampgroundForDates(int open_from_mm, int open_to_mm) {
+	public List<Campground> getCampgroundForDates(int open_from_mm, int open_to_mm, int park_id) {
 		List<Campground>  campgrounds = new ArrayList<Campground>();
-		String sqlGetAllCampgrounds = "SELECT * FROM campground WHERE open_from_mm < ? AND open_to_mm > ?";
-		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAllCampgrounds, open_from_mm, open_to_mm);
+		String sqlGetAllCampgrounds = "SELECT * FROM campground " +
+							"JOIN park ON campground.park_id = ? " +
+							"WHERE open_from_mm < ? AND open_to_mm > ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAllCampgrounds, open_from_mm, open_to_mm, park_id);
 		while(results.next()) {
 			Campground campground = mapRowToCampground(results);
 			campgrounds.add(campground);

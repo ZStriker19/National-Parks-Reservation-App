@@ -16,8 +16,8 @@ public class Menu {
 	}
 //Same method as below, but returns int
 	public int getChoiceFromOptions(String[] options) {
-		int choice = 0;
-		while(choice == 0) {
+		int choice = -2;
+		while(choice < -1) {
 			displayMenuOptions(options);
 			choice = getChoiceFromUserInput(options);
 		}
@@ -25,7 +25,7 @@ public class Menu {
 	}
 	
 	protected int getChoiceFromUserInput(String[] options) {
-		int choice = 0;
+		int choice = -2;
 		String userInput = in.nextLine();
 		if(userInput.equals("q") || userInput.equals("Q") ) {
 			choice = -1;
@@ -33,13 +33,13 @@ public class Menu {
 		else {
 			try {
 				int selectedOption = Integer.valueOf(userInput);
-				if(selectedOption <= options.length) {
-					choice = selectedOption - 1;
+				if(selectedOption <= options.length && selectedOption > 0) {
+					choice = selectedOption -1;
 				}
 			} catch(NumberFormatException e) {
 				// eat the exception, an error message will be displayed below since choice will be null
 			}
-			if(choice == 0) {
+			if(choice == -2) {
 				out.println("\n*** "+userInput+" is not a valid option ***\n");
 			}
 		}
