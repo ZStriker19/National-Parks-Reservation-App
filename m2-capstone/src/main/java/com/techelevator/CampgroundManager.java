@@ -13,13 +13,13 @@ public class CampgroundManager {
 	
 	private ArrayList <Campground> campgrounds = new ArrayList<Campground>();
 	private String [] availabileSiteStr;
-	private int campgroundSelected =0;
+	private int campgroundSelected = 0;
 	private Date arrivalDate;
 	private Date departureDate;
 	private int siteSelected = 0;
 	String reservationName = "";
 	
-	public ArrayList getCampgrounds () {
+	public ArrayList<Campground> getCampgrounds () {
 		return campgrounds;
 	}
 	
