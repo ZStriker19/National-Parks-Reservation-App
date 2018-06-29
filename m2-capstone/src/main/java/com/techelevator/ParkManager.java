@@ -2,6 +2,8 @@ package com.techelevator;
 
 import java.util.ArrayList;
 
+import DAOInterfacesAndJavaBeans.Park;
+
 public class ParkManager {
 	private int id;
 	ArrayList<Park> allParks;

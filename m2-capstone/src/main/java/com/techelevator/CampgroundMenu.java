@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import com.techelevator.view.Menu;
 
+import DAOInterfacesAndJavaBeans.Campground;
+
 public class CampgroundMenu extends Menu{
 
 	private final String searchForAvailRes = "Search for Available Reservation";

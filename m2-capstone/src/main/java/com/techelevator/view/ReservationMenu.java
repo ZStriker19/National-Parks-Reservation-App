@@ -9,9 +9,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.techelevator.Campground;
 import com.techelevator.CampgroundManager;
 import com.techelevator.CampgroundMenu;
+
+import DAOInterfacesAndJavaBeans.Campground;
 
 public class ReservationMenu extends Menu {
 	

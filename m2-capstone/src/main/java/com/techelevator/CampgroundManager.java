@@ -6,6 +6,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import DAOInterfacesAndJavaBeans.Campground;
+import DAOInterfacesAndJavaBeans.Site;
+
 public class CampgroundManager {
 	
 	private ArrayList <Campground> campgrounds = new ArrayList<Campground>();

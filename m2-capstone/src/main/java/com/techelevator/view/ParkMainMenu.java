@@ -5,6 +5,8 @@ import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import DAOInterfacesAndJavaBeans.Park;
+
 public class ParkMainMenu extends Menu {
 	
 	private List<String> parkNames = new ArrayList<String>();
@@ -19,5 +21,10 @@ public class ParkMainMenu extends Menu {
 //	private setParks() {
 //		this.parkNames = parkManager.getParkNames 
 //	}
+	
+	
+	public String[] getParks() {
+		//return park names.
+	}
 
 }
