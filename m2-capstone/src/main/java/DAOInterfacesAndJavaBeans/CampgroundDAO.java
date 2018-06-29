@@ -7,6 +7,6 @@ public interface CampgroundDAO {
 	public List<Campground> getAllCampgrounds();
 	
 	
-	public List<Campground> getCampgroundForDates();
+	public List<Campground> getCampgroundForDates(int open_from_mm, int open_to_mm);
 
 }

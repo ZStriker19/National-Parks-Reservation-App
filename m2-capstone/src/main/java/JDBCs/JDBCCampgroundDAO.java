@@ -33,9 +33,16 @@ public class JDBCCampgroundDAO implements CampgroundDAO {
 	}
 
 	@Override
-	public List<Campground> getCampgroundForDates() {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Campground> getCampgroundForDates(int open_from_mm, int open_to_mm) {
+		List<Campground>  campgrounds = new ArrayList<Campground>();
+		String sqlGetAllCampgrounds = "SELECT * FROM campground WHERE open_from_mm < ? AND open_to_mm > ?";
+		SqlRowSet results = jdbcTemplate.queryForRowSet(sqlGetAllCampgrounds, open_from_mm, open_to_mm);
+		while(results.next()) {
+			Campground campground = mapRowToCampground(results);
+			campgrounds.add(campground);
+		}
+		
+		return campgrounds;
 	}
 	
 	private Campground mapRowToCampground(SqlRowSet results) {
