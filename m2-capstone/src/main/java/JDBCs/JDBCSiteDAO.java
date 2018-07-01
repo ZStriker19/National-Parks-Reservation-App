@@ -18,13 +18,14 @@ public class JDBCSiteDAO implements SiteDAO {
 	public JDBCSiteDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
 	}
-	
+	//Need to only Select sites at the with the campground ID entered.
 	@Override
-	public List <Site> getAllCampgroundSites() {
-		String SiteSQL = "SELECT * FROM Site";
+	public List <Site> getAllCampgroundSites(int campgroundId) {
+		System.out.println(campgroundId);
+		String SiteSQL = "SELECT * FROM Site Where campground_id = ?";
 		ArrayList<Site> siteList = new ArrayList<>();
 		
-		SqlRowSet results = jdbcTemplate.queryForRowSet(SiteSQL);
+		SqlRowSet results = jdbcTemplate.queryForRowSet(SiteSQL, campgroundId + 1);
 		while(results.next()) {
 			Site site = mapRowToSite(results);
 			siteList.add(site);

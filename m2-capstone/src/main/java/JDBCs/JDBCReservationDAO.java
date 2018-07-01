@@ -1,4 +1,10 @@
 package JDBCs;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.sql.Types;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -17,9 +23,10 @@ import DAOInterfacesAndJavaBeans.Site;
 public class JDBCReservationDAO implements ReservationDAO{
 
 	private JdbcTemplate jdbcTemplate;
-	
+	private DataSource dataSource;
 	public JDBCReservationDAO(DataSource dataSource) {
 		this.jdbcTemplate = new JdbcTemplate(dataSource);
+		this.dataSource = dataSource;
 	}
 	
 	@Override
@@ -38,14 +45,26 @@ public class JDBCReservationDAO implements ReservationDAO{
 
 	@Override
 	public long createReservation(Reservation newReservation) {
-		
-		String ReservationSQL = "INSERT INTO reservation(reservation_id, from_date, to_date, site_id, name) VALUES (?,?,?,?,?) ";
-		newReservation.setReservation_id(getNextReservationId());
-		 jdbcTemplate.update(ReservationSQL, newReservation.getReservation_id(), newReservation.getFrom_date(), newReservation.getTo_date(), newReservation.getSite_id(), newReservation.getName());
+		Connection con = null;
+		Statement stmt;
+		long reservation_id = 0;
+		String ReservationSQL = "INSERT INTO reservation(from_date, to_date, site_id, name) VALUES (?,?,?,?)";
+	    jdbcTemplate.update(ReservationSQL, newReservation.getFrom_date(), newReservation.getTo_date(), newReservation.getSite_id() + 1, newReservation.getName());
+		 String sqlGetGeneratedId = "SELECT currval('reservation_reservation_id_seq')";
+			 try {
+				 con = dataSource.getConnection();
+				stmt = con.createStatement();
+				 ResultSet rs = stmt.executeQuery(sqlGetGeneratedId);
+				if (rs.next()) {
+					reservation_id = rs.getLong(1);
+				}
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
-		return newReservation.getReservation_id();
+		return reservation_id;
 	}
-	
 
 	
 	private Reservation mapRowToReservation(SqlRowSet results) {
@@ -62,7 +81,7 @@ public class JDBCReservationDAO implements ReservationDAO{
 	}
 	
 	private long getNextReservationId() {
-        SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval('seq_reservation_id')");
+        SqlRowSet nextIdResult = jdbcTemplate.queryForRowSet("SELECT nextval(pg_get_serial_sequence('reservation', 'reservation_id'))");
         if(nextIdResult.next()) {
             return nextIdResult.getLong(1);
         } else {

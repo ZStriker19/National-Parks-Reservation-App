@@ -6,7 +6,9 @@ import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import com.techelevator.CampgroundManager;
@@ -14,6 +16,7 @@ import com.techelevator.CampgroundMenu;
 
 import DAOInterfacesAndJavaBeans.Campground;
 import JDBCs.JDBCReservationDAO;
+import JDBCs.JDBCSiteDAO;
 
 public class ReservationMenu extends Menu {
 	
@@ -30,9 +33,11 @@ public class ReservationMenu extends Menu {
 		String[] campgroundStrs =  campgroundManager.createCampgroundStr();
 		return campgroundStrs;
 	}
+	
 	public void printCampgroundToSelect() {
 		System.out.print("Which campground (enter Q to cancel)? ");
 	}
+	
 	public void askArrivalDate(CampgroundManager campgroundManager) {
 		boolean isNotValidDate = true;
 		while(isNotValidDate) {
@@ -63,9 +68,21 @@ public class ReservationMenu extends Menu {
 	}
 	
 	public void selectSiteToReserve(CampgroundManager campgroundManager) {
-		System.out.print("Which site should be reserved (use the left most column to select) (enter Q to cancel)? ");
-		campgroundManager.setSiteSelected(super.getChoiceFromOptions(campgroundManager.getSiteAvailabilityStr()));
+		out.println("Results matching your criteria:\n");
+		out.println("Campground\t SiteNumber\t Max Occup.\t Accessible?\t  RvLen\t Utility\t Cost\n");
+		campgroundManager.setSiteSelected(getChoiceFromOptions(campgroundManager.getSiteAvailabilityStr()));
 	}
+	//seeing if this overides so we can put custom message for site choice.
+	protected void displayMenuOptions(Object[] options) {
+		out.println();
+		for(int i = 0; i < options.length; i++) {
+			int optionNum = i+1;
+			out.println(optionNum+") "+options[i]);
+		}
+		out.print("Please select a location to reserve (use the left most column to select) (enter Q to cancel)? ");
+		out.flush();
+	}
+	
 	public void getReservationName(CampgroundManager campgroundManager) {
 		boolean invalidName = true;
 		while(invalidName) {
@@ -76,7 +93,7 @@ public class ReservationMenu extends Menu {
 			}
 			else{
 				campgroundManager.setReservationName(userInput);
-				invalidName = true;
+				invalidName = false;
 			}
 		}
 	}
@@ -101,10 +118,9 @@ public class ReservationMenu extends Menu {
 	}
 	
 	//Results code
-	public boolean tryDisplayAvailability(CampgroundManager campgroundManager) {
-		if(campgroundManager.checkAvailability()) {
-			String [] availabileSiteStr = campgroundManager.getSiteAvailabilityStr();
-			//Will display string array
+	public boolean tryDisplayAvailability(CampgroundManager campgroundManager, JDBCSiteDAO siteDAO) {
+		if(campgroundManager.checkAvailability(siteDAO)) {
+			return true;
 		}
 		System.out.println("The dates you selected were unavailable :( ");
 		return false;
@@ -112,12 +128,13 @@ public class ReservationMenu extends Menu {
 	
 	
 	public static boolean isDateValid(String date) {
+		DateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        Date d = null;
+        df.setLenient(false);
 	        try {
-	            DateFormat df = new SimpleDateFormat(DATE_FORMAT);
-	            df.setLenient(false);
-	            df.parse(date);
+	            d = df.parse(date);
 	            return true;
-	        } catch (ParseException e) {
+	        } catch (Exception e) {
 	            return false;
 	        }
 	}
