@@ -19,7 +19,7 @@ public class Reservation {
 	public int getSite_id() {
 		return site_id;
 	}
-	public void setSite_id(int site_it) {
+	public void setSite_id(int site_id) {
 		this.site_id = site_id;
 	}
 	public String getName() {

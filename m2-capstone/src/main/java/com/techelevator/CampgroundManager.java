@@ -120,6 +120,7 @@ public class CampgroundManager {
 		Reservation newReservation = new Reservation();
 		newReservation.setFrom_date(arrivalDate);
 		newReservation.setTo_date(departureDate);
+		System.out.println("this the site selected: in create reservation " + this.siteSelected);
 		newReservation.setSite_id(siteSelected);
 		newReservation.setName(reservationName);
 		return reservationDAO.createReservation(newReservation);
@@ -127,6 +128,7 @@ public class CampgroundManager {
 	}
 	
 	public void setSiteSelected(int i) {
+		System.out.println("this the site selected: " + i);
 		this.siteSelected = i;
 	}
 	

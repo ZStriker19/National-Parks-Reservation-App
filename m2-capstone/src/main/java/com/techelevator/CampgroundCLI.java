@@ -55,9 +55,8 @@ public class CampgroundCLI {
 			while (runParkMenu) {
 				parkInfoMenu.getSelectedParkInformation(choice, parkManager);
 				String parkChoice = (String)parkInfoMenu.getChoiceFromOptionsSTR(parkInfoMenu.getCampgroundOptions());
-				
+				campgroundMenu.setCampgrounds(campgroundManager, choice, campgroundDAO);
 				if(parkChoice.equals(parkInfoMenu.getViewCampgrounds())) {
-					campgroundMenu.setCampgrounds(campgroundManager, choice, campgroundDAO);
 					campgroundMenu.displayAllCampgroundsForPark(campgroundManager);
 					boolean runningViewCampgrounds = true;
 					while(runningViewCampgrounds) {
@@ -86,17 +85,20 @@ public class CampgroundCLI {
 					}
 				}
 				else if (parkChoice.equals(parkInfoMenu.getSearchForReservation())){
-					int campgroundChoice = reservationMenu.getChoiceFromOptions(reservationMenu.getCampgroundStr());
+					int campgroundChoice = reservationMenu.getChoiceFromOptions(reservationMenu.getCampgroundStr(campgroundManager));
 					if(campgroundChoice == -1) {
 						break;
 					}
 					else {
 						reservationMenu.setCampgroundSelected(campgroundChoice, campgroundManager);
+						//Start working here again! Need to fix the date comparison! 
+						//Don't forget to copy me all below!
 						reservationMenu.askArrivalDate(campgroundManager);
 						reservationMenu.askDepatureDate(campgroundManager);
 						if(reservationMenu.tryDisplayAvailability(campgroundManager, siteDAO)==false) continue;
 						reservationMenu.selectSiteToReserve(campgroundManager);
 						reservationMenu.getReservationName(campgroundManager);
+						//here
 						reservationMenu.createReservation(campgroundManager, reservationDAO);
 					}
 				}

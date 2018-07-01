@@ -49,17 +49,16 @@ public class JDBCReservationDAO implements ReservationDAO{
 		Statement stmt;
 		long reservation_id = 0;
 		String ReservationSQL = "INSERT INTO reservation(from_date, to_date, site_id, name) VALUES (?,?,?,?)";
-	    jdbcTemplate.update(ReservationSQL, newReservation.getFrom_date(), newReservation.getTo_date(), newReservation.getSite_id() + 1, newReservation.getName());
+	    jdbcTemplate.update(ReservationSQL, newReservation.getFrom_date(), newReservation.getTo_date(), newReservation.getSite_id() +1, newReservation.getName());
 		 String sqlGetGeneratedId = "SELECT currval('reservation_reservation_id_seq')";
 			 try {
-				 con = dataSource.getConnection();
+				con = dataSource.getConnection();
 				stmt = con.createStatement();
-				 ResultSet rs = stmt.executeQuery(sqlGetGeneratedId);
+				ResultSet rs = stmt.executeQuery(sqlGetGeneratedId);
 				if (rs.next()) {
 					reservation_id = rs.getLong(1);
 				}
 			} catch (SQLException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 

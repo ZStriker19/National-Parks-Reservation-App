@@ -22,7 +22,7 @@ public class JDBCSiteDAO implements SiteDAO {
 	@Override
 	public List <Site> getAllCampgroundSites(int campgroundId) {
 		System.out.println(campgroundId);
-		String SiteSQL = "SELECT * FROM Site Where campground_id = ?";
+		String SiteSQL = "SELECT * FROM Site Where campground_id = ? LIMIT 5";
 		ArrayList<Site> siteList = new ArrayList<>();
 		
 		SqlRowSet results = jdbcTemplate.queryForRowSet(SiteSQL, campgroundId + 1);

@@ -31,7 +31,7 @@ public class ParkInfoMenu extends Menu {
 	}
 	public void getSelectedParkInformation(int userInput, ParkManager parkManager) {
 		parkManager.setId(userInput);
-		System.out.print(parkManager.getParkString());
+		System.out.print("\n" + parkManager.getParkString());
 	}
 	public void displayCampgrounds() {
 		
