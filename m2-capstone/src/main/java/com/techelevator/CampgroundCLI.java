@@ -68,14 +68,11 @@ public class CampgroundCLI {
 							}
 							else {
 								reservationMenu.setCampgroundSelected(campgroundChoice, campgroundManager);
-								//Start working here again! Need to fix the date comparison! 
-								//Don't forget to copy me all below!
 								reservationMenu.askArrivalDate(campgroundManager);
 								reservationMenu.askDepatureDate(campgroundManager);
 								if(reservationMenu.tryDisplayAvailability(campgroundManager, siteDAO)==false) continue;
 								reservationMenu.selectSiteToReserve(campgroundManager);
 								reservationMenu.getReservationName(campgroundManager);
-								//here
 								reservationMenu.createReservation(campgroundManager, reservationDAO);
 							}
 						}
