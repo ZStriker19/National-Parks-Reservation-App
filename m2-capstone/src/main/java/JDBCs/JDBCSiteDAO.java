@@ -1,5 +1,14 @@
 package JDBCs;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javax.sql.DataSource;
@@ -7,6 +16,7 @@ import javax.sql.DataSource;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 
+import DAOInterfacesAndJavaBeans.Reservation;
 import DAOInterfacesAndJavaBeans.Site;
 import DAOInterfacesAndJavaBeans.SiteDAO;
 
@@ -21,7 +31,6 @@ public class JDBCSiteDAO implements SiteDAO {
 	//Need to only Select sites at the with the campground ID entered.
 	@Override
 	public List <Site> getAllCampgroundSites(int campgroundId) {
-		System.out.println(campgroundId);
 		String SiteSQL = "SELECT * FROM Site Where campground_id = ? LIMIT 5";
 		ArrayList<Site> siteList = new ArrayList<>();
 		
@@ -31,6 +40,63 @@ public class JDBCSiteDAO implements SiteDAO {
 			siteList.add(site);
 		}
 		return siteList;
+	}
+	
+	
+	
+	
+	public List<Site> getAvailSites(String arrivalDate, String departureDate, int campground_id) {
+		int openFromMonth = 0;
+		int openToMonth = 0;
+		
+		ArrayList<Site> siteList = new ArrayList<>();
+		String sqlCheckCampMonths = "SELECT open_from_mm, open_to_mm FROM campground WHERE campground_id = ?";
+		SqlRowSet resultMonths = jdbcTemplate.queryForRowSet(sqlCheckCampMonths, campground_id +1);
+		
+		if (resultMonths.next()) {
+			openFromMonth = Integer.parseInt(resultMonths.getString("open_from_mm"));
+			openToMonth = Integer.parseInt(resultMonths.getString("open_to_mm"));
+		}
+		
+		int to_date_int = Integer.parseInt(arrivalDate.substring(0, 2));
+		int from_date_int = Integer.parseInt(departureDate.substring(0, 2));
+		
+		if (openFromMonth <= to_date_int && openToMonth >= to_date_int && openFromMonth <= from_date_int && openToMonth >= from_date_int ) {
+			String sqlIsSiteAvail = "SELECT * " +
+					" FROM site JOIN campground ON ? = campground.campground_id WHERE site.campground_id = ? "
+					+ "AND site.site_id" +
+					" NOT IN " +
+					"(SELECT site.site_id FROM site " +
+					"JOIN reservation ON reservation.site_id = site.site_id" + 
+					" WHERE ((to_date(?, 'YYYY/MM/DD')) <= reservation.to_date AND (to_date(?, 'YYYY/MM/DD')) >= reservation.from_date)) " +
+					 " ORDER BY site.site_number LIMIT 5";
+					DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+					String newArrString = "";
+					String newDepString = "";
+					
+					try {
+						SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+						Date d = sdf.parse(arrivalDate);
+						Date ds = sdf.parse(departureDate);
+						sdf.applyPattern("yyyy/MM/dd");
+						newArrString = sdf.format(d);
+					    newDepString = sdf.format(ds);
+					} catch (ParseException e) {
+						e.printStackTrace();
+					}
+					
+					
+					SqlRowSet results = jdbcTemplate.queryForRowSet(sqlIsSiteAvail, campground_id + 1, campground_id + 1, newArrString, newDepString);
+					while(results.next()) {
+						Site site = mapRowToSite(results);
+						siteList.add(site);
+					}
+			
+		}
+		return siteList;
+		
+		
+		
 	}
 
 	@Override

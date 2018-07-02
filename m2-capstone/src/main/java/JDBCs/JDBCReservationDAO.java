@@ -5,6 +5,9 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Types;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -48,8 +51,19 @@ public class JDBCReservationDAO implements ReservationDAO{
 		Connection con = null;
 		Statement stmt;
 		long reservation_id = 0;
+		String newToString = "";
+		String newFromString = "";
+		SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+		Date d = null;
+		Date ds = null;
+		try {
+			d = sdf.parse(newReservation.getTo_date());
+			ds = sdf.parse(newReservation.getFrom_date());
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
 		String ReservationSQL = "INSERT INTO reservation(from_date, to_date, site_id, name) VALUES (?,?,?,?)";
-	    jdbcTemplate.update(ReservationSQL, newReservation.getFrom_date(), newReservation.getTo_date(), newReservation.getSite_id() +1, newReservation.getName());
+	    jdbcTemplate.update(ReservationSQL, ds, d, newReservation.getSite_id() +1, newReservation.getName());
 		 String sqlGetGeneratedId = "SELECT currval('reservation_reservation_id_seq')";
 			 try {
 				con = dataSource.getConnection();
@@ -72,8 +86,8 @@ public class JDBCReservationDAO implements ReservationDAO{
 		theReservation.setReservation_id(results.getLong("reservation_id"));
 		theReservation.setSite_id(results.getInt("site_id"));
 		theReservation.setName(results.getString("name"));
-		theReservation.setFrom_date(results.getDate("from_date"));
-		theReservation.setTo_date(results.getDate("to_date"));
+		theReservation.setFrom_date(results.getString("from_date"));
+		theReservation.setTo_date(results.getString("to_date"));
 		theReservation.setCreate_date(results.getDate("create_date"));
 		
 		return theReservation;

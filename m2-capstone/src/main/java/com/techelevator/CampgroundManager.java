@@ -3,6 +3,7 @@ package com.techelevator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -25,8 +26,8 @@ public class CampgroundManager {
 	private ArrayList <Campground> campgrounds = new ArrayList<Campground>();
 	private String [] availabileSiteStr;
 	private int campgroundSelected = 0;
-	private Date arrivalDate;
-	private Date departureDate;
+	private String arrivalDate;
+	private String departureDate;
 	private int siteSelected = 0;
 	String reservationName = "";
 	
@@ -58,10 +59,7 @@ public class CampgroundManager {
 	
 	//Get campground availability 
 	public boolean checkAvailability(JDBCSiteDAO siteDAO) {
-		System.out.println(campgroundSelected);
-//		List<Site> sites = siteDAO.getAllCampgroundSites(campgroundSelected);
-		List<Site> sites = siteDAO.getAllCampgroundSites(campgroundSelected);
-		//Call DAO based on information collected
+		List<Site> sites = siteDAO.getAvailSites(arrivalDate, departureDate, campgroundSelected);
 		if(sites.size() > 0) {
 			Site[] sitesArr = (Site[]) sites.stream().toArray(Site[]::new);
 			createSiteSTR(sitesArr);
@@ -79,12 +77,27 @@ public class CampgroundManager {
 		String accessible = "";
 		String utilities = "";
 		String rvLength = "";
+		DateFormat format = new SimpleDateFormat("MM/dd/yyyy");
+		Date arrivalDateDate = null;
+		Date departureDateDate = null;
+		
+		try {
+			arrivalDateDate = format.parse(arrivalDate);
+			departureDateDate = format.parse(departureDate);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+				
+//				String string = "January 2, 2010";
+//		DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//		Date date = format.parse(string);		
+				
 		for (int i = 0; i < sites.length; i++) {
 			for (int j = 0; j < campgrounds.size(); j++) {
 				if (sites[i].getCampground_id() == (int) campgrounds.get(j).getCampground_id()) {
 					campgroundName = campgrounds.get(j).getName();
 					
-					long numDays =  (arrivalDate.getTime()-departureDate.getTime())/86400000;
+					long numDays =  (arrivalDateDate.getTime()-departureDateDate.getTime())/86400000;
 			        long absNumDays =  Math.abs(numDays);
 					cost = campgrounds.get(j).getDaily_fee().multiply(new BigDecimal(absNumDays)).setScale(2, RoundingMode.DOWN).toString(); 
 				}
@@ -120,15 +133,16 @@ public class CampgroundManager {
 		Reservation newReservation = new Reservation();
 		newReservation.setFrom_date(arrivalDate);
 		newReservation.setTo_date(departureDate);
-		System.out.println("this the site selected: in create reservation " + this.siteSelected);
 		newReservation.setSite_id(siteSelected);
 		newReservation.setName(reservationName);
 		return reservationDAO.createReservation(newReservation);
 		
 	}
 	
+	
+
+	
 	public void setSiteSelected(int i) {
-		System.out.println("this the site selected: " + i);
 		this.siteSelected = i;
 	}
 	
@@ -136,26 +150,17 @@ public class CampgroundManager {
 		this.campgroundSelected = i;
 	}
 	public void setArrivalDate(String date) {
-		try {
-			this.arrivalDate = new SimpleDateFormat("mm/dd/yyy").parse(date);
-		}
-		catch (ParseException e) {
-			e.printStackTrace();
-		}
+			this.arrivalDate = date;
 	}
 	public void setDepartureDate(String date) {
-		try {
-			this.departureDate = new SimpleDateFormat("mm/dd/yyy").parse(date);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
+			this.departureDate = date;
 	}
 	
-	public Date getArrivalDate() {
+	public String getArrivalDate() {
 		return arrivalDate;
 	}
 	
-	public Date getDepartureDate() {
+	public String getDepartureDate() {
 		return departureDate;
 	}
 	
