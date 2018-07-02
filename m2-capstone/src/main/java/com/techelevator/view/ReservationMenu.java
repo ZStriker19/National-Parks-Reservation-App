@@ -67,11 +67,17 @@ public class ReservationMenu extends Menu {
 		}
 	}
 	
-	public void selectSiteToReserve(CampgroundManager campgroundManager) {
+	public int selectSiteToReserve(CampgroundManager campgroundManager) {
 		out.println("Results matching your criteria:\n");
 		out.println("Campground\t SiteNumber\t Max Occup.\t Accessible?\t  RvLen\t Utility\t Cost\n");
-		campgroundManager.setSiteSelected(getChoiceFromOptions(campgroundManager.getSiteAvailabilityStr()));
+		return super.getChoiceFromOptions(campgroundManager.getSiteAvailabilityStr());
 	}
+	
+	public void setSiteSelected(int siteSelected, CampgroundManager campgroundManager) {
+		campgroundManager.setSiteSelected(siteSelected);
+	}
+	
+	
 	//seeing if this overides so we can put custom message for site choice.
 	protected void displayMenuOptions(Object[] options) {
 		out.println();

@@ -71,7 +71,11 @@ public class CampgroundCLI {
 								reservationMenu.askArrivalDate(campgroundManager);
 								reservationMenu.askDepatureDate(campgroundManager);
 								if(reservationMenu.tryDisplayAvailability(campgroundManager, siteDAO)==false) continue;
-								reservationMenu.selectSiteToReserve(campgroundManager);
+								int siteChoice = reservationMenu.selectSiteToReserve(campgroundManager);
+								if (siteChoice == -1) {
+									break;
+								}
+								reservationMenu.setSiteSelected(siteChoice, campgroundManager);
 								reservationMenu.getReservationName(campgroundManager);
 								reservationMenu.createReservation(campgroundManager, reservationDAO);
 							}
@@ -93,7 +97,11 @@ public class CampgroundCLI {
 						reservationMenu.askArrivalDate(campgroundManager);
 						reservationMenu.askDepatureDate(campgroundManager);
 						if(reservationMenu.tryDisplayAvailability(campgroundManager, siteDAO)==false) continue;
-						reservationMenu.selectSiteToReserve(campgroundManager);
+						int siteChoice = reservationMenu.selectSiteToReserve(campgroundManager);
+						if (siteChoice == -1) {
+							break;
+						}
+						reservationMenu.setSiteSelected(siteChoice, campgroundManager);
 						reservationMenu.getReservationName(campgroundManager);
 						//here
 						reservationMenu.createReservation(campgroundManager, reservationDAO);
