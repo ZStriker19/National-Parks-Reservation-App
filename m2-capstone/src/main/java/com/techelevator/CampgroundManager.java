@@ -25,6 +25,7 @@ public class CampgroundManager {
 	
 	private ArrayList <Campground> campgrounds = new ArrayList<Campground>();
 	private String [] availabileSiteStr;
+	private Site[] availableSites;
 	private int campgroundSelected = 0;
 	private String arrivalDate;
 	private String departureDate;
@@ -59,7 +60,7 @@ public class CampgroundManager {
 	
 	//Get campground availability 
 	public boolean checkAvailability(JDBCSiteDAO siteDAO) {
-		List<Site> sites = siteDAO.getAvailSites(arrivalDate, departureDate, campgroundSelected);
+		List<Site> sites = siteDAO.getAvailSites(arrivalDate, departureDate, campgrounds.get(campgroundSelected).getCampground_id());
 		if(sites.size() > 0) {
 			Site[] sitesArr = (Site[]) sites.stream().toArray(Site[]::new);
 			createSiteSTR(sitesArr);
@@ -71,6 +72,7 @@ public class CampgroundManager {
 	}
 	
 	private void createSiteSTR(Site[] sites) {
+		this.setAvailableSites(sites);
 		String[] availableSiteStr = new String[sites.length];
 		String campgroundName = "";
 		String cost = "";
@@ -133,7 +135,7 @@ public class CampgroundManager {
 		Reservation newReservation = new Reservation();
 		newReservation.setFrom_date(arrivalDate);
 		newReservation.setTo_date(departureDate);
-		newReservation.setSite_id(siteSelected);
+		newReservation.setSite_id((availableSites[siteSelected].getSite_id().intValue()));
 		newReservation.setName(reservationName);
 		return reservationDAO.createReservation(newReservation);
 		
@@ -173,6 +175,14 @@ public class CampgroundManager {
 	}
 	public String getReservationName() {
 		return reservationName;
+	}
+
+	public Site[] getAvailableSites() {
+		return availableSites;
+	}
+
+	public void setAvailableSites(Site[] availableSites) {
+		this.availableSites = availableSites;
 	}
 	
 }

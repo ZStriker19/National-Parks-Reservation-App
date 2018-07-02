@@ -63,30 +63,7 @@ public class JBDCCampgroundDAOIntergrationTest {
 		Assert.assertEquals(3, results.size());
 	}
 	
-	@Test //COME BACK TO THIS ONE!
-	public void testGetAllCampgroundForDates() {
-		
-	}
 	
-	private Campground getCampground(Long campground_id, Long park_id, String name, int open_from_mm, int open_to_mm, BigDecimal daily_fee) {
-		Campground theCampground = new Campground();
-		theCampground.setCampground_id(campground_id);
-		theCampground.setPark_id(park_id);
-		theCampground.setName(name);
-		theCampground.setOpen_from_mm(open_from_mm);
-		theCampground.setOpen_to_mm(open_to_mm);
-		theCampground.setDaily_fee(daily_fee);
-		return theCampground;
-	}
-
-	private void assertCampgroundAreEqual(Campground expected, Campground actual) {
-		assertEquals(expected.getCampground_id(), actual.getCampground_id());
-		assertEquals(expected.getPark_id(), actual.getPark_id());
-		assertEquals(expected.getName(), actual.getName());
-		assertEquals(expected.getOpen_from_mm(), actual.getOpen_from_mm());
-		assertEquals(expected.getOpen_to_mm(), actual.getOpen_to_mm());
-		assertEquals(expected.getDaily_fee(), actual.getDaily_fee());
-	}
 
 
 }

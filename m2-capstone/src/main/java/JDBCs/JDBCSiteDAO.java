@@ -45,25 +45,38 @@ public class JDBCSiteDAO implements SiteDAO {
 	
 	
 	
-	public List<Site> getAvailSites(String arrivalDate, String departureDate, int campground_id) {
+	public List<Site> getAvailSites(String arrivalDate, String departureDate, long campground_id) {
 		int openFromMonth = 0;
 		int openToMonth = 0;
 		
 		ArrayList<Site> siteList = new ArrayList<>();
 		String sqlCheckCampMonths = "SELECT open_from_mm, open_to_mm FROM campground WHERE campground_id = ?";
-		SqlRowSet resultMonths = jdbcTemplate.queryForRowSet(sqlCheckCampMonths, campground_id +1);
+		SqlRowSet resultMonths = jdbcTemplate.queryForRowSet(sqlCheckCampMonths, campground_id);
 		
 		if (resultMonths.next()) {
 			openFromMonth = Integer.parseInt(resultMonths.getString("open_from_mm"));
 			openToMonth = Integer.parseInt(resultMonths.getString("open_to_mm"));
 		}
+		//Need to change this to get to an int that it's happy with. Because it doesn't like parsing 03
+		int to_date_int = 0;
+		int from_date_int = 0;
+		String toSTR =  arrivalDate.substring(0,2);
+		String fromSTR = departureDate.substring(0,2);
+		if (toSTR.substring(0,1).equals("0")) {
+			to_date_int = Integer.parseInt(toSTR.substring(1,2));
+		} else {
+			to_date_int = Integer.parseInt(arrivalDate.substring(0, 2));
+		}
 		
-		int to_date_int = Integer.parseInt(arrivalDate.substring(0, 2));
-		int from_date_int = Integer.parseInt(departureDate.substring(0, 2));
-		
+		if (fromSTR.substring(0,1).equals("0")) {
+			from_date_int = Integer.parseInt(fromSTR.substring(1,2));
+		} else {
+			from_date_int = Integer.parseInt(arrivalDate.substring(0, 2));
+		}
+
 		if (openFromMonth <= to_date_int && openToMonth >= to_date_int && openFromMonth <= from_date_int && openToMonth >= from_date_int ) {
 			String sqlIsSiteAvail = "SELECT * " +
-					" FROM site JOIN campground ON ? = campground.campground_id WHERE site.campground_id = ? "
+					" FROM site JOIN campground ON site.campground_id = campground.campground_id WHERE site.campground_id = ? "
 					+ "AND site.site_id" +
 					" NOT IN " +
 					"(SELECT site.site_id FROM site " +
@@ -84,9 +97,9 @@ public class JDBCSiteDAO implements SiteDAO {
 					} catch (ParseException e) {
 						e.printStackTrace();
 					}
+					System.out.println(" camp " + campground_id + " dep: " + newDepString + " arr " + newArrString);
 					
-					
-					SqlRowSet results = jdbcTemplate.queryForRowSet(sqlIsSiteAvail, campground_id + 1, campground_id + 1, newArrString, newDepString);
+					SqlRowSet results = jdbcTemplate.queryForRowSet(sqlIsSiteAvail, campground_id, newArrString, newDepString);
 					while(results.next()) {
 						Site site = mapRowToSite(results);
 						siteList.add(site);

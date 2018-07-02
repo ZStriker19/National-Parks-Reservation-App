@@ -29,7 +29,7 @@ import org.junit.BeforeClass;
 
 public class JDBCSiteDAOIntegrationTest {
 
-private static final long site_id = (long) 623;
+private static final long site_id = (long) 1;
 	
 	private static SingleConnectionDataSource dataSource;
 	private JDBCSiteDAO dao;
@@ -64,15 +64,23 @@ private static final long site_id = (long) 623;
 	
 	@Test
 	public void testGetAllCampgroundSites() {
-		List<Site> results = dao.getAllCampgroundSites();
+		List<Site> results = dao.getAllCampgroundSites(5); //campgroundID = 5
 		Assert.assertNotNull(results);
-		Assert.assertEquals(623, results.size());
+		Assert.assertEquals(1, results.size());
 	}
 	
 	@Test //COME BACK TO THIS ONE!!!
 	public void testGetSitesById() {
-		Long test_siteID = (long) 285;
-		List<Site> results = dao.getSitesByID();
+		//Site theSite = null;
+		//theSite.setCampground_id(5);
+		List<Site> results = dao.getAllCampgroundSites(5);
+		//theSite.getSite_id();
+		Assert.assertNotNull(results);
+		Assert.assertEquals(1, results.size());
+		
+//		
+//		Long test_siteID = (long) 285;
+//		List<Site> results = dao.getSitesByID();
 		
 		
 		Assert.assertNotNull(results);

@@ -63,7 +63,7 @@ public class JDBCReservationDAO implements ReservationDAO{
 			e1.printStackTrace();
 		}
 		String ReservationSQL = "INSERT INTO reservation(from_date, to_date, site_id, name) VALUES (?,?,?,?)";
-	    jdbcTemplate.update(ReservationSQL, ds, d, newReservation.getSite_id() +1, newReservation.getName());
+	    jdbcTemplate.update(ReservationSQL, ds, d, newReservation.getSite_id(), newReservation.getName());
 		 String sqlGetGeneratedId = "SELECT currval('reservation_reservation_id_seq')";
 			 try {
 				con = dataSource.getConnection();

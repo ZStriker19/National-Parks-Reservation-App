@@ -3,6 +3,9 @@ package com.techelevator;
 import static org.junit.Assert.*;
 
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +15,6 @@ import org.junit.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.SingleConnectionDataSource;
 
-import com.techelevator.projects.model.Department;
 
 import DAOInterfacesAndJavaBeans.Campground;
 import DAOInterfacesAndJavaBeans.Park;
@@ -75,7 +77,24 @@ private static final long reservation_id = (long) 45;
 	@Test
 	public void testCreateReservation() {
 		
-		Reservation theReservation = getReservation((long)45, 2, "Reservation for Katie", 2018,06,01, 2018-06-10, 2018-05-01);
+		Reservation theReservation;
+		
+		DateFormat sdf = new SimpleDateFormat("MM/dd/yyyy");
+//		String createDateStr = theReservation.setCreate_date(5-1-2018);
+//		String create_date_str = sdf.format(date);
+		Date d = null;
+		try {
+			d = sdf.parse(theReservation.getCreate_date());
+		} catch (ParseException e1) {
+			e1.printStackTrace();
+		}
+		//long site_id = 22;
+		theReservation.setFrom_date("2018-06-05");
+		theReservation.setTo_date("2018-06-10");
+		theReservation.setName("Reservation for Katie");
+		theReservation.setSite_id(22);
+		
+		//theReservation = getReservation((long)45, 2, "Reservation for Katie", theReservation.setFrom_date("2018-06-05"), theReservation.setTo_date("2018-06-10"));
 		//Department theDepartment = getDepartment(7, "Human Resources");
 		List<Reservation> results = dao.getAllReservations();
 		Assert.assertNotNull(results);
@@ -91,17 +110,17 @@ private static final long reservation_id = (long) 45;
 		
 	}
 	
-	private Reservation getReservation(Long reservation_id, int site_id, String name, Date from_date, Date to_date, Date create_date) {
-		
-		Reservation theReservation = new Reservation();
-		theReservation.getReservation_id();
-		theReservation.getSite_id();
-		theReservation.getName();
-		theReservation.getFrom_date();
-		theReservation.getTo_date();
-		theReservation.getCreate_date();
-		return theReservation;
-	}
+//	private Reservation getReservation(Long reservation_id, int site_id, String name, Date from_date, Date to_date, Date create_date) {
+//		
+//		Reservation theReservation = new Reservation();
+//		theReservation.getReservation_id();
+//		theReservation.getSite_id();
+//		theReservation.getName();
+//		theReservation.getFrom_date();
+//		theReservation.getTo_date();
+//		theReservation.getCreate_date();
+//		return theReservation;
+//	}
 
 	private void assertReservationAreEqual(Reservation expected, Reservation actual) {
 		assertEquals(expected.getReservation_id(), actual.getReservation_id());
