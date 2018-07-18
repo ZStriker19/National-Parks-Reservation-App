@@ -62,6 +62,7 @@ public class JDBCSiteDAO implements SiteDAO {
 		int from_date_int = 0;
 		String toSTR =  arrivalDate.substring(0,2);
 		String fromSTR = departureDate.substring(0,2);
+		
 		if (toSTR.substring(0,1).equals("0")) {
 			to_date_int = Integer.parseInt(toSTR.substring(1,2));
 		} else {
